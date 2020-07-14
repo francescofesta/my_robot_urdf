@@ -7,10 +7,10 @@
     <xacro:property name="radius_caster" value="0.025"/>
     <xacro:property name="length" value="0.02"/>
     <xacro:property name="wheel_mass" value="2.5" /> <!-- in kg-->
-    <xacro:property name="base_x_origin_to_caster_front_origin" value="0.115"/>
+<!--     <xacro:property name="base_x_origin_to_caster_front_origin" value="0.115"/>
     <xacro:property name="base_z_origin_to_caster_front" value="0.007"/>
     <xacro:property name="base_x_origin_to_caster_back_origin" value="-0.135"/>
-    <xacro:property name="base_z_origin_to_caster_back" value="0.009"/>
+    <xacro:property name="base_z_origin_to_caster_back" value="0.009"/> -->
     
     <xacro:property name="base_y_origin_to_wheel_origin" value="0.15"/>
     
@@ -50,7 +50,7 @@
           <cylinder length="${length}" radius="${radius_wheel}" />
         </geometry>
       </collision>
-      <cylinder_inertia m="${wheel_mass}" r="${radius_wheel}" h="${length}" />
+      <xacro:cylinder_inertia m="${wheel_mass}" r="${radius_wheel}" h="${length}" />
     </link>
 
     <gazebo reference="${lr}_wheel">
@@ -74,7 +74,7 @@
       
     </xacro:macro>
 
-    <xacro:macro name="caster_wheel" params= "fb parent translateX">   <!--translateX=0 per front translateX=1 per back-->
+    <xacro:macro name="caster_wheel" params= "fb parent translateX base_x_origin_to_caster_origin base_z_origin_to_caster_origin">   <!--translateX=0 per front translateX=1 per back-->
         <link name="caster_${fb}_wheel">
             <visual>
                 <origin xyz="${translateX*0.02}  0.02 0" rpy="1.57 0 0"/>
@@ -88,13 +88,13 @@
                     <sphere radius="${radius_caster}"/>
                 </geometry>
             </collision>
-            <caster_inertia m="${wheel_mass}" r="${radius_caster}"/>
+            <xacro:caster_inertia m="${wheel_mass}" r="${radius_caster}"/>
         </link>
 
         <joint name="caster_${fb}_joint" type="continuous">
             <parent link="${parent}"/>
             <child link="caster_${fb}_wheel"/>
-            <origin xyz="${base_x_origin_to_caster_${fb}_origin} 0 ${base_z_origin_to_caster_${fb}}" rpy="-1.57 0 0"/>
+            <origin xyz="${base_x_origin_to_caster_origin} 0 ${base_z_origin_to_caster_origin}" rpy="-1.57 0 0"/>
         </joint>
 
         <gazebo reference="caster_${fb}_wheel">
@@ -114,7 +114,7 @@
         </geometry>
         <origin rpy= "0 0 0" xyz= "0 0 0" />
         </visual>
-        <cylinder_inertia m="5" r="0.02" h="0.15" />
+        <xacro:cylinder_inertia m="5" r="0.02" h="0.15" />
     </link>
 
     <gazebo reference="base_link">
@@ -126,11 +126,11 @@
         <turnGravityOff>false</turnGravityOff>
     </gazebo>
 
-    <cylinder_wheel  lr="left" parent="base_link" translateX="0" translateY="0.5" flipY="1" />
-    <cylinder_wheel  lr="right" parent="base_link" translateX="0" translateY="-0.5" flipY="1" />
+    <xacro:cylinder_wheel  lr="left" parent="base_link" translateX="0" translateY="0.5" flipY="1" />
+    <xacro:cylinder_wheel  lr="right" parent="base_link" translateX="0" translateY="-0.5" flipY="1" />
 
-    <caster_wheel fb="front" parent="base_link" translateX="0" />
-    <caster_wheel fb="front" parent="base_link" translateX="1" />
+    <xacro:caster_wheel fb="front" parent="base_link" translateX="0" base_x_origin_to_caster_origin="0.115" base_z_origin_to_caster_origin="0.007" />
+    <xacro:caster_wheel fb="back" parent="base_link" translateX="1" base_x_origin_to_caster_origin="0.135" base_z_origin_to_caster_origin="0.009" />
 
 
 
