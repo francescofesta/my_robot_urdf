@@ -7,7 +7,11 @@
     <xacro:property name="radius_caster" value="0.025"/>
     <xacro:property name="length" value="0.02"/>
     <xacro:property name="wheel_mass" value="2.5" /> <!-- in kg-->
-
+    <xacro:property name="base_x_origin_to_caster_front_origin" value="0.115"/>
+    <xacro:property name="base_z_origin_to_caster_front" value="0.007"/>
+    <xacro:property name="base_x_origin_to_caster_back_origin" value="-0.135"/>
+    <xacro:property name="base_z_origin_to_caster_back" value="0.009"/>
+    
     <xacro:macro name="cylinder_inertia" params="m r h">
         <inertial>
             <mass value="${m}"/>
@@ -15,6 +19,17 @@
             <inertia ixx="${m*(3*r*r+h*h)/12}" ixy = "0" ixz = "0"
               iyy="${m*(3*r*r+h*h)/12}" iyz = "0"
               izz="${m*r*r/2}" />
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macreo name="caster_inertia" params="m r">
+        <inertial>
+            <mass value="${m}"/>
+            <origin xyz="0 0 0"/>
+            <inertia ixx="${(2*m*r*r)/5}" ixy="0" ixz="0"
+                iyy="${(2*m*r*r)/5}" iyz="0"
+                izz="${(2*m*r*r)/5}" />
+              
         </inertial>
     </xacro:macro>
 
@@ -37,14 +52,27 @@
     </xacro:macro>
 
     <xacro:macro name="caster_wheel" params= "fb parent translateX translateY">
-        <link name="${fb}_wheel">
+        <link name="caster_${fb}_wheel">
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
-                    <sphere radius="${radius_caster}"/>
-                    
+                    <sphere radius="${radius_caster}"/>   
                 </geometry>
             </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <sphere radius="${radius_caster}"/>
+                </geometry>
+            </collision>
+            <caster_inertia m="${wheel_mass}" r="${radius_caster}"/>
         </link>
+
+        <joint name="caster_${fb}_joint" type="continuous">
+            <parent link="${parent}"/>
+            <child link="caster_${fb}_wheel"/>
+            <origin xyz="${translateX * base_x_origin_to_caster_${fb}_origin} 0 ${base_z_origin_to_caster_${fb}}" rpy="-1.57 0 0"/>
+
+        </joint>
     </xacro:macro>
 </robot>
