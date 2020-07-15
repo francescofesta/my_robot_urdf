@@ -91,7 +91,7 @@
             <xacro:caster_inertia m="${wheel_mass}" r="${radius_caster}"/>
         </link>
 
-        <joint name="caster_${fb}_joint" type="continuous">
+        <joint name="caster_${fb}_joint" type="fixed">
             <parent link="${parent}"/>
             <child link="caster_${fb}_wheel"/>
             <origin xyz="${base_x_origin_to_caster_origin} 0 ${base_z_origin_to_caster_origin}" rpy="-1.57 0 0"/>
@@ -110,11 +110,11 @@
     <link name="base_link">
         <visual>
         <geometry>
-            <cylinder length="0.15" radius="0.02"/>
+            <cylinder length="0.02" radius="0.15"/>
         </geometry>
         <origin rpy= "0 0 0" xyz= "0 0 0" />
         </visual>
-        <xacro:cylinder_inertia m="5" r="0.02" h="0.15" />
+        <xacro:cylinder_inertia m="5" r="0.15" h="0.02" />
     </link>
 
     <gazebo reference="base_link">
@@ -130,7 +130,7 @@
     <xacro:cylinder_wheel  lr="right" parent="base_link" translateX="0" translateY="-0.5" flipY="1" />
 
     <xacro:caster_wheel fb="front" parent="base_link" translateX="0" base_x_origin_to_caster_origin="0.115" base_z_origin_to_caster_origin="0.007" />
-    <xacro:caster_wheel fb="back" parent="base_link" translateX="1" base_x_origin_to_caster_origin="0.135" base_z_origin_to_caster_origin="0.009" />
+    <xacro:caster_wheel fb="back" parent="base_link" translateX="1" base_x_origin_to_caster_origin="-0.135" base_z_origin_to_caster_origin="0.009" />
 
 
 
