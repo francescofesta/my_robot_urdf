@@ -38,39 +38,48 @@
 
     <xacro:macro name="cylinder_wheel" params="lr parent translateX translateY flipY"> <!--fb : front, back ; lr: left, right -->
          <link name="${lr}_wheel">
-      <visual>
-        <origin xyz="0 0 0" rpy="${flipY*pi/2} 0  0 " /> 
-        <geometry>
-          <cylinder length="${length}" radius="${radius_wheel}" />
-        </geometry>
-      </visual>
-      <collision>
-        <origin xyz="0 0 0" rpy="${flipY*pi/2} 0 0 " />
-        <geometry>
-          <cylinder length="${length}" radius="${radius_wheel}" />
-        </geometry>
-      </collision>
-      <xacro:cylinder_inertia m="${wheel_mass}" r="${radius_wheel}" h="${length}" />
-    </link>
+            <visual>
+                <origin xyz="0 0 0" rpy="${flipY*pi/2} 0  0 " /> 
+                <geometry>
+                <cylinder length="${length}" radius="${radius_wheel}" />
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="${flipY*pi/2} 0 0 " />
+                <geometry>
+                <cylinder length="${length}" radius="${radius_wheel}" />
+                </geometry>
+            </collision>
+            <xacro:cylinder_inertia m="${wheel_mass}" r="${radius_wheel}" h="${length}" />
+        </link>
 
-    <gazebo reference="${lr}_wheel">
-      <mu1 value="1.0"/>
-      <mu2 value="1.0"/>
-      <kp value="10000000.0"/>
-      <kd value="1.0"/>
-      <fdir1 value="1.0"/>
-      <turnGravityOff>false</turnGravityOff>
-    </gazebo>
+        <gazebo reference="${lr}_wheel">
+            <mu1 value="1.0"/>
+            <mu2 value="1.0"/>
+            <kp value="10000000.0"/>
+            <kd value="1.0"/>
+            <fdir1 value="1.0"/>
+            <turnGravityOff>false</turnGravityOff>
+        </gazebo>
 
-    <joint name="${lr}_wheel_joint" type="continuous">
-      <parent link="${parent}"/>
-      <child link="${lr}_wheel"/>
-      <origin xyz="0 ${translateY*base_y_origin_to_wheel_origin} 0" rpy="0 0 0"/>
-      <axis xyz="0 1 0" rpy="0 0 0"/>
-      <limit effort="100" velocity="100"/>
-      <joint_properties damping="0.0" friction="0.0"/>
-    
-    </joint>
+        <joint name="${lr}_wheel_joint" type="continuous">
+            <parent link="${parent}"/>
+            <child link="${lr}_wheel"/>
+            <origin xyz="0 ${translateY*base_y_origin_to_wheel_origin} 0" rpy="0 0 0"/>
+            <axis xyz="0 1 0" rpy="0 0 0"/>
+            <limit effort="100" velocity="100"/>
+            <joint_properties damping="0.0" friction="0.0"/>
+            
+        </joint>
+        <transmission name="${lr}_wheel_joint_trans">
+            <type>transmission_interface/simpleTransmission</type>
+            <joint name="${lr}_wheel_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${lr}_wheel_joint_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+        </transmission>
       
     </xacro:macro>
 
@@ -131,6 +140,15 @@
 
     <xacro:caster_wheel fb="front" parent="base_link" translateX="0" base_x_origin_to_caster_origin="0.115" base_z_origin_to_caster_origin="0.007" />
     <xacro:caster_wheel fb="back" parent="base_link" translateX="1" base_x_origin_to_caster_origin="-0.135" base_z_origin_to_caster_origin="0.009" />
+
+
+
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>my_robot</robotNamespace>
+        </plugin>
+    </gazebo>
 
 
 
