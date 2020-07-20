@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="$(find my_robot_urdf)/urdf/camera.urdf.xacro"/>
 
     <xacro:property name="pi" value="3.1415" />
     <xacro:property name="radius_wheel" value="0.04"/>
@@ -140,7 +141,7 @@
 
     <xacro:caster_wheel fb="front" parent="base_link" translateX="0" base_x_origin_to_caster_origin="0.115" base_z_origin_to_caster_origin="0.007" />
     <xacro:caster_wheel fb="back" parent="base_link" translateX="1" base_x_origin_to_caster_origin="-0.135" base_z_origin_to_caster_origin="0.009" />
-
+    <xacro:mycameraRGB/>
 
 
 
