@@ -10,14 +10,15 @@
             file="$(find my_robot_urdf)/config/joints_state.yaml" />
   
     <rosparam command="load"
-            file="$(find my_robot_urdf)/config/velocity_controller.yaml"/>
+            file="$(find my_robot_urdf)/config/DD_controller.yaml"/>
 
   <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" />
   <param name="use_gui" value="$(arg gui)"/>
 
   <node name="my_robot_controller_spawner" pkg="controller_manager" type="spawner"
     args=" joint_state
-            velocity_controller"/>
+            
+            DD_controller"/>
 
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
