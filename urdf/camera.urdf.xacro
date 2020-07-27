@@ -1,15 +1,25 @@
 <?xml version="1.0"?>
 
 <robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    
+    <xacro:property name="PI" value="3.1415926535897931"/>
+    <xacro:property name="mass" value="1" /> <!-- arbitrary value for mass -->
+    <xacro:property name="width" value="0.1" /> <!-- Square dimensions (widthxwidth) of beams -->
+    <xacro:property name="height1" value="2" /> <!-- Link 1 -->
+    <xacro:property name="height2" value="1" /> <!-- Link 2 -->
+    <xacro:property name="height3" value="1" /> <!-- Link 3 -->
+    <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
+    <xacro:property name="axel_offset" value="0.05" /> <!-- Space btw top of beam and the each joint -->
 
-    <xacro:macro name="camera">
+    <xacro:macro name="mycameraRGB">
 
-        <joint name="camera_joint" type="fixed">
+
+        
         <joint name="camera_joint" type="fixed">
             <axis xyz="0 1 0" />
-            <origin xyz="${camera_link} 0 {height3 - axel_offset*2}" rpy="0 0 0"/>
+            <origin xyz="${camera_link} 0 ${length}" rpy="0 0 0"/>                      <!-- - axel_offset*2  -->
             <parent link="base_link"/>
-            child link="camera_link"/>
+            <child link="camera_link"/>
         </joint>
 
         <link name="camera_link">
@@ -25,13 +35,13 @@
                 <geometry>
                     <box size="${camera_link} ${camera_link} ${camera_link}"/>
                 </geometry>
-                <material name="red"/>
+                <!-- <material name="red"/> -->
             </visual>
 
             <inertial>
                 <mass value="1e-5"/>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
-                <inertia ixx="1e-6" ixy="0" iyy="1e-6" iyz="0" izz="1e-6" />
+                <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
             </inertial>
         </link>
         <gazebo reference="camera_link">
@@ -57,7 +67,7 @@
                 <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
                     <alwaysOn>true</alwaysOn>
                     <updateRate>0.0</updateRate>
-                    <cameraName>rrbot/camera1</cameraName>
+                    <cameraName>camera1</cameraName>
                     <imageTopicName>image_raw</imageTopicName>
                     <cameraInfoTopicName>camera_info</cameraInfoTopicName>
                     <frameName>camera_link</frameName>
@@ -68,8 +78,8 @@
                     <distortionT1>0.0</distortionT1>
                     <distortionT2>0.0</distortionT2>
                 </plugin>
-            <sensor>
+            </sensor>
 
         </gazebo>
     </xacro:macro> 
-    <xacro:property name="camera_link" value="0.05" /> <!-- Size of square 'camera' box -->
+</robot>
