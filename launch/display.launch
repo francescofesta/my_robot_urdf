@@ -6,6 +6,7 @@
   <include file="$(find my_robot_urdf)/launch/gazebo.launch">
     <arg name="model" value="$(arg model)"/>
   </include>
+  <arg name= "AR" default="$(find my_robot_urdf)/urdf/AR_tag.urdf"/>
   <rosparam command="load"
             file="$(find my_robot_urdf)/config/joints_state.yaml" />
   

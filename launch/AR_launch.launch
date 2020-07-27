@@ -1,0 +1,16 @@
+<launch>
+    <arg name="x" default="0.0" />
+    <arg name="y" default="0.5" />
+    <arg name="z" default="0.5" />
+    <arg name="roll" default="1.57"/>
+    <arg name="pitch" default="0"/>
+    <arg name="yaw" default="0" />
+
+    <arg name="model" default="$(find my_robot_urdf)/urdf/AR_tag.urdf" />
+    <arg name="robot_name" default="AR" />
+
+    <param name="robot_descriptionAR" command="$(find xacro)/xacro.py $(arg model)" />
+
+    <node name="$(arg robot_name)_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+        args="-urdf -x 0.0 -y 0.5 -z 0.5 -R 1.57 -P 0 -Y 0 -model AR -param robot_descriptionAR"/>
+</launch>
