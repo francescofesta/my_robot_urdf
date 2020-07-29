@@ -18,8 +18,8 @@
     <arg name="headless" value="$(arg headless)"/>
   </include>
 
-  <include file="$(find my_robot_urdf)/launch/AR_launch.launch">
-  </include>
+<!--   <include file="$(find my_robot_urdf)/launch/AR_launch.launch">
+  </include> -->
 
   <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
 

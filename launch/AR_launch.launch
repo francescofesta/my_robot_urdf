@@ -12,5 +12,5 @@
     <param name="robot_descriptionAR" command="$(find xacro)/xacro.py $(arg model)" />
 
     <node name="$(arg robot_name)_urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
-        args="-urdf -x 0.0 -y 0.5 -z 0.5 -R 1.57 -P 0 -Y 0 -model AR -param robot_descriptionAR"/>
+        args="-urdf -x 0.0 -y 0.5 -z 0.5 -R 0 -P 0 -Y 0 -model AR -param robot_descriptionAR"/>
 </launch>
