@@ -10,7 +10,8 @@ project(my_robot_urdf)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  std_msg
+  std_msgs
+  sensor_msgs
   geometry_msgs
   
   rviz
@@ -75,9 +76,10 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+#  DEPENDENCIES
+#  std_msgs  # Or other packages containing msgs
+#  sensor_msgs
+#)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -109,10 +111,11 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES my_robot_urdf
-#  CATKIN_DEPENDS roscpp rospy std_msg
-#  DEPENDS system_lib
+# INCLUDE_DIRS include
+  LIBRARIES my_robot_urdf
+  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs
+# DEPENDS system_lib
+
 )
 
 ###########
@@ -122,7 +125,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+ include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -210,3 +213,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(subscriber scripts/subscriber.cpp)
+target_link_libraries(subscriber ${catkin_LIBRARIES})
+
