@@ -5,33 +5,33 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.79.0</authoring_tool>
     </contributor>
-    <created>2017-12-06T21:09:04</created>
-    <modified>2017-12-06T21:09:04</modified>
+    <created>2020-09-18T10:26:35</created>
+    <modified>2020-09-18T10:26:35</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
   <library_images>
-    <image id="MarkerData_2020_png" name="MarkerData_2020_png">
-      <init_from>MarkerData_1.png</init_from>
+    <image id="Marker_101_png" name="Marker_101_png">
+      <init_from>Marker_101.png</init_from>
     </image>
   </library_images>
   <library_effects>
-    <effect id="MarkerData_2020_png-effect">
+    <effect id="Marker_101_png-effect">
       <profile_COMMON>
-        <newparam sid="MarkerData_2020_png-surface">
+        <newparam sid="Marker_101_png-surface">
           <surface type="2D">
-            <init_from>MarkerData_2020_png</init_from>
+            <init_from>Marker_101_png</init_from>
           </surface>
         </newparam>
-        <newparam sid="MarkerData_2020_png-sampler">
+        <newparam sid="Marker_101_png-sampler">
           <sampler2D>
-            <source>MarkerData_2020_png-surface</source>
+            <source>Marker_101_png-surface</source>
           </sampler2D>
         </newparam>
         <technique sid="common">
           <phong>
             <diffuse>
-              <texture texture="MarkerData_2020_png-sampler" texcoord="MarkerData_2020_png"/>
+              <texture texture="Marker_101_png-sampler" texcoord="Marker_101_png"/>
             </diffuse>
             <specular>
               <color sid="specular">0 0 0 1</color>
@@ -42,15 +42,15 @@
     </effect>
   </library_effects>
   <library_materials>
-    <material id="MarkerData_2020_png-material" name="MarkerData_2020_png">
-      <instance_effect url="#MarkerData_2020_png-effect"/>
+    <material id="Marker_101_png-material" name="Marker_101_png">
+      <instance_effect url="#Marker_101_png-effect"/>
     </material>
   </library_materials>
   <library_geometries>
     <geometry id="Cube-mesh" name="Cube">
       <mesh>
         <source id="Cube-mesh-positions">
-          <float_array id="Cube-mesh-positions-array" count="24">0.5 0.5 -0.5 0.5 -0.5 -0.5 -0.5000001 -0.4999999 -0.5 -0.4999998 0.5000002 -0.5 0.5000002 0.4999997 0.5 0.4999997 -0.5000003 0.5 -0.5000002 -0.4999998 0.5 -0.5 0.5 0.5</float_array>
+          <float_array id="Cube-mesh-positions-array" count="24">1 1 -1 1 -1 -1 -1 -0.9999998 -1 -0.9999997 1 -1 1 0.9999995 1 0.9999994 -1.000001 1 -1 -0.9999997 1 -1 1 1</float_array>
           <technique_common>
             <accessor source="#Cube-mesh-positions-array" count="8" stride="3">
               <param name="X" type="float"/>
@@ -81,7 +81,7 @@
         <vertices id="Cube-mesh-vertices">
           <input semantic="POSITION" source="#Cube-mesh-positions"/>
         </vertices>
-        <triangles material="MarkerData_2020_png-material" count="12">
+        <triangles material="Marker_101_png-material" count="12">
           <input semantic="VERTEX" source="#Cube-mesh-vertices" offset="0"/>
           <input semantic="NORMAL" source="#Cube-mesh-normals" offset="1"/>
           <input semantic="TEXCOORD" source="#Cube-mesh-map-0" offset="2" set="0"/>
@@ -94,11 +94,11 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="Cube" name="Cube" type="NODE">
-        <matrix sid="transform">0.09000003 0 0 0 0 0.09000003 0 0 0 0 0.01065584 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.06999997 0 0 0 0 0.06999997 0 0 0 0 0.005 0 0 0 0 1</matrix>
         <instance_geometry url="#Cube-mesh" name="Cube">
           <bind_material>
             <technique_common>
-              <instance_material symbol="MarkerData_2020_png-material" target="#MarkerData_2020_png-material">
+              <instance_material symbol="Marker_101_png-material" target="#Marker_101_png-material">
                 <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
               </instance_material>
             </technique_common>

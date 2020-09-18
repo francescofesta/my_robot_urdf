@@ -18,7 +18,7 @@
             <origin rpy="0.0 0 0" xyz="0 0 0"/>
             <geometry>
                 <!--<box size="0.8 0.8 0.2"/>-->
-                <mesh filename="package://my_robot_urdf/meshes/aruco_mesh.dae"/>
+                <mesh filename="package://my_robot_urdf/meshes/mesh101.dae"/>
             </geometry>
         </visual>
     </link>
