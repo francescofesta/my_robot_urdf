@@ -1,0 +1,8 @@
+roslaunch my_robot_urdf display.launch  //launch robot in gazebo
+
+rosrun gazebo_ros spawn_model -file '/home/francesco/catkin_ws/src/my_robot_urdf/urdf/aruco_tag.urdf' -urdf -model ar_tag -x 1 -P 1.57 // spawn aruco tag in gazebo 
+
+roslaunch aruco_detect aruco_detect.launch //start detection
+
+
+
