@@ -8,6 +8,8 @@ from tf.transformations import euler_from_quaternion
 
 from IO_Linearization import io_linearization_control_law
 from trajectory_generation import Trajectory_generation
+#from get_pose_aruco import x_goal
+#from get_pose_aruco import y_goal
 
 class Trajectory_Control():
 
@@ -22,6 +24,8 @@ class Trajectory_Control():
     q=[]
     dotx_d=[]
     doty_d=[]
+    x_goal=[]
+    y_goal=[]
 
     #methods:
 
@@ -60,8 +64,11 @@ class Trajectory_Control():
         tg = Trajectory_generation()
         if(trajectory == "cubic"):
             #Cubic_trajectory
-            q_i = np.array([0.,0., 3.14/2]) #Initial posture (x_i,y_i,theta_i)
-            q_f = np.array([3.,6., 0.])    #Final posture   (x_f,y_f,theta_f)
+#            q_i = np.array([0.,0., 3.14/2]) #Initial posture (x_i,y_i,theta_i)
+            q_i = np.array([0.,0., 0])
+#            q_f = np.array([3.,6., 0.])    #Final posture   (x_f,y_f,theta_f)
+            q_f = np.array([x_goal,y_goal, 0.])
+
             init_final_velocity = 2
             (self.x_d, self.y_d, self.v_d, self.w_d, self.theta_d) = tg.cubic_trajectory(q_i, q_f, init_final_velocity, self.t)   
         elif(trajectory == "eight"):
