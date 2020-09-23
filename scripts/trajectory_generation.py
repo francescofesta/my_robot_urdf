@@ -20,7 +20,7 @@ class Trajectory_generation():
 
         a_x = k*np.cos(q_f[2]) - 3*q_f[0]
         a_y = k*np.sin(q_f[2]) - 3*q_f[1]
-
+        
         #Cartesian cubic path 
         x = x_f*s**3 - x_i*(s-1)**3 + a_x * s**2 * (s-1) + b_x * s * (s-1)**2
         y = y_f*s**3 - y_i*(s-1)**3 + a_y * s**2 * (s-1) + b_y * s * (s-1)**2
@@ -40,7 +40,7 @@ class Trajectory_generation():
         #Compute the angular velocity
         w = (ypp*xp - xpp*yp)/(v**2)
         
-        return [x, y, v, w, theta]
+        return [x, y, v, w, theta, xp, yp]
 
     def cyrcular_trajectory(self, t):
         R = 3
