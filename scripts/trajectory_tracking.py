@@ -36,11 +36,14 @@ class Trajectory_control():
     def __init__(self):
         rospy.loginfo("Starting node Trajectory control")
         rospy.init_node('trajectory_control', anonymous=True) #make node
+        self.twist_pub = rospy.Publisher('/DD_controller/cmd_vel', Twist, queue_size=10) 
+        rospy.Subscriber('/ground_truth/state',Odometry, self.odometryCb) 
         #elf.twist_pub = rospy.Publisher('/r2d2_diff_drive_controller/cmd_vel', Twist, queue_size=10)
         rospy.Subscriber('/fiducial_transforms', FiducialTransformArray, self.ArucoCb)
-        self.twist_pub = rospy.Publisher('/DD_controller/cmd_vel', Twist, queue_size=10) 
+        
+        
 
-        rospy.Subscriber('/ground_truth/state',Odometry, self.odometryCb)  
+         
        
 
         
@@ -53,15 +56,16 @@ class Trajectory_control():
         y = round(msg.pose.pose.position.y,4)
         theta = round(self.get_angle_pose(msg.pose.pose),4) 
         self.q = np.array([x, y, theta])
+        print("odometry:" , self.q)
         return self.q
 
     def ArucoCb(self,msg):
         if msg.transforms:
             self.x_goal=msg.transforms[0].transform.translation.z
-            self.y_goal=msg.transforms[0].transform.translation.x
+            self.y_goal=-msg.transforms[0].transform.translation.x
         # self.x_goal=1.
         # self.y_goal=1.
-        #print(self.x_goal, self.y_goal) 
+        print(self.x_goal, self.y_goal) 
         # self.goal_pose=np.array([self.x_goal,self.y_goal])
         
         # return self.goal_pose
@@ -81,15 +85,22 @@ class Trajectory_control():
     def trajectory_generation(self, trajectory):
         tg = Trajectory_generation()
         if(trajectory == "cubic"):
+            # global_pose=self.get_pose()
+            # global_aruco=self.from_vehicle2global_frame(global_pose[0],global_pose[1],global_pose[2],self.x_goal,self.y_goal)
+
+        
             #Cubic_trajectory
-            q_i = np.array([0.,0., 0.]) #Initial posture (x_i,y_i,theta_i)
-            #q_f = np.array([1.27,-0.14, 0.])    #Final posture   (x_f,y_f,theta_f)
-            print(self.x_goal,self.y_goal)
-            q_f = np.array([self.x_goal,self.y_goal, 0.])
+            # q_i = np.array([self.q[0],self.q[1],self.q[2]]) #Initial posture (x_i,y_i,theta_i)
+            q_i = np.array(0., 0., 0.)
+            q_f = np.array(3., 6., 0.)    #Final posture   (x_f,y_f,theta_f)
+            #print(self.x_goal,self.y_goal)
+            # q_f = np.array([self.x_goal, self.y_goal, 0.])
+            
             print(q_f)
-            init_final_velocity = 2
+            init_final_velocity = 0.8 # 2
             (self.x_d, self.y_d, self.v_d, self.w_d, self.theta_d, self.dotx_d, self.doty_d) = tg.cubic_trajectory(q_i, q_f, init_final_velocity, self.t)   
-            print(self.x_d)
+            # print("xd: ", self.x_d)
+            #print("yd: ",self.y_d)
         elif(trajectory == "eight"):
             #Eight trajectory
             (self.x_d, self.y_d, self.dotx_d, self.doty_d) = tg.eight_trajectory(self.t)
@@ -138,15 +149,30 @@ class Trajectory_control():
 
         for i in np.arange(0, len(self.t)-1):
             (y1, y2, theta) = self.get_point_coordinate(b)
-            (v, w) = io_linearization_control_law(y1, y2, theta, self.x_d[i], self.y_d[i], self.dotx_d[i], self.doty_d[i], b)
-            print("linear:{} and angular:{}".format(v, w))           
-            #move robot
-            self.send_velocities(v, w, theta)
+            global_aruco=self.from_vehicle2global_frame(self.q[0],self.q[1],self.q[2],self.x_goal,self.y_goal)
+            print(global_aruco)
+            dist = np.sqrt((self.q[0]-global_aruco[0])**2+(self.q[1]-global_aruco[1])**2)
+            if (dist>0.2):
+                (v, w) = io_linearization_control_law(y1, y2, theta, self.x_d[i], self.y_d[i], self.dotx_d[i], self.doty_d[i], b)
+                print("linear:{} and angular:{}".format(v, w))  
+                            
+                    #move robot
+                self.send_velocities(v, w, theta)
+            else:
+                break
+                 
+            #     self.send_velocities(0,0,0)
             rospy.sleep(max_t/len_t)
         
         #stop after time
         self.send_velocities(0,0,0)
 
+    def from_vehicle2global_frame(self, x, y, theta, xv, yv):
+        mat=np.matrix([[np.cos(theta), -np.sin(theta), 0, x],[np.sin(theta), np.cos(theta), 0, y],[0, 0, 1, 0], [0, 0, 0, 1]])
+        vehicle_cord=np.array([xv, yv, 0, 1])
+        vehicle_cord=vehicle_cord.reshape(4,1)
+        global_frame=mat*vehicle_cord
+        return global_frame
 
 
 
@@ -167,9 +193,14 @@ if __name__ == "__main__":
         tc.t = np.linspace(0, 100, 1000)
        
         trajectory = "cubic"  #cubic, eight, cyrcular
-        tc.trajectory_generation(trajectory)
-        #tc.unicicle_nonLinear_control()
-        tc.unicycle_linearized_control()
+        while(1):
+            if (tc.x_goal) != 0 and (tc.y_goal!=0):
+                tc.trajectory_generation(trajectory)
+                #tc.unicicle_nonLinear_control()
+                tc.unicycle_linearized_control()
+                break
+        
+        
 
         #tc.unicycle_cartesian_regulation()
 
